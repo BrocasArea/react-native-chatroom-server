@@ -1,0 +1,1 @@
+$ export RN_CHATROOM_GCMKEY=YOUR_KEY

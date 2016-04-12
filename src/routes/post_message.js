@@ -4,35 +4,41 @@ const Notification = require('../libs/notification');
 
 module.exports = {
   method: 'POST',
-  path: '/api/v1/message',
-  handler: function(request, reply) {
-    let roomId = request.payload.roomId;
-    let username = request.payload.username;
-    let message = request.payload.message;
-
-    Notification
-      .roomBroadcast(roomId, username, message)
-      .then(function (response) {
-        request.log('info', 'roomBroadcast response: ' + JSON.stringify(response) );
-        reply({
-          roomId: request.payload.roomId,
-          username: request.payload.username,
-          message: request.payload.message
-        });
-      })
-      .catch(function (err) {
-        console.log('err', err, err.message);
-        reply(err);
-        throw err
-      });
-  },
+  path: '/api/v1/room/{roomId}/message',
   config: {
+    description: '發送訊息',
+    notes: '發送訊息到聊天室的其他人',
+    tags: ['api'],
     validate: {
+      params: {
+        roomId: Joi.string().min(1).required()
+      },
       payload: {
-        roomId: Joi.string().min(1).required(),
         username: Joi.string().min(1).required(),
-        message: Joi.string().required()
+        content: Joi.string().required()
       }
     }
+  },
+  handler: {
+    async: async function(request, reply) {
+      request.log('info', 'Join Room');
+
+      let roomId = request.params.roomId;
+      let username = request.payload.username;
+      let content = request.payload.content;
+
+      let db = request.server.plugins['hapi-mongoose'].connection;
+      let mesg = await db.model('message').create({ roomId, username, content }); // TODO models.createMessage
+      let users = await db.model('room_user').find({ roomId }); // TODO models.findRoomUsers
+
+      // sned message
+      let res = await Promise.all(
+        users.map(user => Notification.snedGCM(user.gcmId, user.roomId, { username, content }))
+      );
+      request.log('info', res);
+
+      reply(mesg);
+    }
   }
+
 };

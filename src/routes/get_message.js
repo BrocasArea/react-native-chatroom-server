@@ -1,5 +1,5 @@
 
-const Joi = require('Joi');
+const Joi = require('joi');
 const Notification = require('../libs/notification');
 
 module.exports = {

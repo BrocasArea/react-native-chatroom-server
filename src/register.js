@@ -25,9 +25,10 @@ const HapiSwaggerOptions = {
   }
 };
 
+const MONGODB_ADDR = process.env.MONGO_PORT_27017_TCP_ADDR || 'localhost:27017';
 const HapiMongooseOptions = {
     bluebird: false,
-    uri: 'mongodb://localhost:27017/rn_chatroom'
+    uri: `mongodb://${MONGODB_ADDR}/rn_chatroom`
 };
 
 module.exports = {

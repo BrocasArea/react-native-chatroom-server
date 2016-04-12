@@ -4,6 +4,7 @@
   "description": "",
   "main": "src/app.js",
   "scripts": {
+    "prestart": "npm install",
     "start": "./node_modules/.bin/babel-node src/app.js"
   },
   "author": "",

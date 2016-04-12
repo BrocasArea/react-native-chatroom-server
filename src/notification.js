@@ -7,8 +7,6 @@ var Notification = {
   addUserToRoom: function(roomId, username, gcmId) {
     Notification._rooms[roomId] = Notification._rooms[roomId] || {};
     Notification._rooms[roomId][username] = gcmId;
-
-    console.log('addUserToRoom done, ', Notification._rooms);
     return Promise.resolve(true);
   },
 

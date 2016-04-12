@@ -2,6 +2,7 @@
 
 const Hapi = require('hapi');
 const Good = require('good');
+const Joi = require('Joi');
 const Notification = require('./notification');
 
 const server = new Hapi.Server();
@@ -52,6 +53,15 @@ server.route({
       .catch(function (err) {
         throw err
       });
+  },
+  config: {
+    validate: {
+      payload: {
+        roomId: Joi.string().min(1).required(),
+        username: Joi.string().min(1).required(),
+        gcmId: Joi.string().required()
+      }
+    }
   }
 });
 
@@ -78,6 +88,15 @@ server.route({
         reply(err);
         throw err
       });
+  },
+  config: {
+    validate: {
+      payload: {
+        roomId: Joi.string().min(1).required(),
+        username: Joi.string().min(1).required(),
+        message: Joi.string().required()
+      }
+    }
   }
 });
 

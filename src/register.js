@@ -3,7 +3,8 @@ const Inert = require('inert');
 const Vision = require('vision');
 const Blipp = require('blipp');
 const HapiSwagger = require('hapi-swagger');
-const HapiAsyncHandler = require('hapi-async-handler')
+const HapiAsyncHandler = require('hapi-async-handler');
+const Tv = require('tv');
 const Pack = require('../package');
 
 const HapiGoodOptions = {
@@ -66,6 +67,12 @@ module.exports = {
           showAuth: false,
           showStart: true
         }
+      }),
+
+      // request debug panel
+      server.register({
+        register: Tv,
+        options: {}
       })
 
     ]);
